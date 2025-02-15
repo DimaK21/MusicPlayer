@@ -1,10 +1,15 @@
 package ru.kryu.musicplayer.ui.search
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kryu.musicplayer.databinding.FragmentSearchBinding
@@ -19,19 +24,52 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var adapter: TrackAdapter
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = FragmentSearchBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
         adapter = TrackAdapter { track -> openPlayer(track) }
         binding.rvApiTracks.adapter = adapter
+        binding.rvApiTracks.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
-        binding.searchButton.setOnClickListener {
-            val query = binding.etSearch.text.toString()
-            if (query.isNotBlank()) viewModel.search(query)
+        binding.etSearch.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val query = binding.etSearch.text.toString()
+                if (query.isNotBlank()) viewModel.search(query)
+                true
+            }
+            false
         }
 
         lifecycleScope.launch {
-            viewModel.state.collect { adapter.updateTracks(it) }
+            viewModel.state.collect { state ->
+                when (state) {
+                    is SearchState.Content -> showContent(state.tracks)
+                    SearchState.Error -> showError()
+                    SearchState.Loading -> showLoading()
+                }
+            }
         }
+    }
+
+    private fun showContent(tracks: List<Track>) {
+        adapter.updateTracks(tracks)
+    }
+
+    private fun showError() {
+
+    }
+
+    private fun showLoading() {
+
     }
 
     private fun openPlayer(track: Track) {

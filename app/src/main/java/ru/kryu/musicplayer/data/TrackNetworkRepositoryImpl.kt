@@ -5,8 +5,11 @@ import kotlinx.coroutines.flow.flow
 import ru.kryu.musicplayer.domain.TrackNetworkRepository
 import ru.kryu.musicplayer.domain.model.Resource
 import ru.kryu.musicplayer.domain.model.Track
+import javax.inject.Inject
 
-class TrackNetworkRepositoryImpl : TrackNetworkRepository {
+class TrackNetworkRepositoryImpl @Inject constructor(
+
+) : TrackNetworkRepository {
     override fun getTopTracks(): Flow<Resource<List<Track>>> = flow {
         emit(Resource.Success(emptyList()))
     }

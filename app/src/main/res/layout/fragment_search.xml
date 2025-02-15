@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:background="@android:drawable/editbox_background"
         android:hint="@string/search_in_deezer"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         android:padding="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
