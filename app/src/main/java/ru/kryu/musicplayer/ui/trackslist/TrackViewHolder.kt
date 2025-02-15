@@ -10,7 +10,11 @@ class TrackViewHolder(
     private val binding: ItemTrackBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(track: Track, onClick: (Track) -> Unit) {
+    fun bind(
+        track: Track,
+        onClick: (Track) -> Unit,
+        onDownloadClick: (Track) -> Unit,
+    ) {
         binding.tvTrackTitle.text = track.title
         binding.tvArtist.text = track.artist
 
@@ -21,5 +25,6 @@ class TrackViewHolder(
             .into(binding.ivTrackCover)
 
         itemView.setOnClickListener { onClick(track) }
+        binding.btnDownload.setOnClickListener { onDownloadClick(track) }
     }
 }

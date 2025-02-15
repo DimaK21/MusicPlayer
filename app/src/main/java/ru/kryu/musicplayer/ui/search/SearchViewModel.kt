@@ -10,13 +10,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.kryu.musicplayer.domain.DownloadRepository
 import ru.kryu.musicplayer.domain.TrackNetworkRepository
 import ru.kryu.musicplayer.domain.model.Resource
+import ru.kryu.musicplayer.domain.model.Track
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val networkRepository: TrackNetworkRepository
+    private val networkRepository: TrackNetworkRepository,
+    private val downloadRepository: DownloadRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow<SearchState>(SearchState.Content(emptyList()))
     val state: StateFlow<SearchState> = _state.asStateFlow()
@@ -72,6 +75,12 @@ class SearchViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    fun downloadTrack(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            downloadRepository.downloadTrack(track)
         }
     }
 }

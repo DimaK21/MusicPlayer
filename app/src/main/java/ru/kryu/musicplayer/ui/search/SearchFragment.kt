@@ -35,7 +35,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = TrackAdapter { track -> openPlayer(track) }
+        adapter = TrackAdapter(
+            onTrackClick = { track -> openPlayer(track) },
+            onDownloadClick = { track -> downloadTrack(track) },
+        )
         binding.rvApiTracks.adapter = adapter
         binding.rvApiTracks.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -74,6 +77,10 @@ class SearchFragment : Fragment() {
 
     private fun openPlayer(track: Track) {
 
+    }
+
+    private fun downloadTrack(track: Track) {
+        viewModel.downloadTrack(track)
     }
 
     override fun onDestroyView() {
