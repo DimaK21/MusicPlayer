@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_background"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -21,6 +22,10 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/bottom_background"
+        android:minHeight="56dp"
+        app:itemPaddingBottom="4dp"
+        app:itemPaddingTop="4dp"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bg_item">#80CBC4</color>
     <color name="icon_color">#E6EE9C</color>
+    <color name="main_background">#FFEBEE</color>
+    <color name="bottom_background">#FFCDD2</color>
 </resources>

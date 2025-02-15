@@ -21,10 +21,46 @@ class SearchViewModel @Inject constructor(
     private val _state = MutableStateFlow<SearchState>(SearchState.Content(emptyList()))
     val state: StateFlow<SearchState> = _state.asStateFlow()
 
+    init {
+        getChart()
+    }
+
+    fun getChart() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update {
+                SearchState.Loading
+            }
+            networkRepository.getTopTracks()
+                .catch {
+                    _state.update {
+                        SearchState.Error
+                    }
+                }
+                .collect { resource ->
+                    if (resource is Resource.Success) {
+                        _state.update {
+                            SearchState.Content(resource.data ?: emptyList())
+                        }
+                    } else {
+                        _state.update {
+                            SearchState.Error
+                        }
+                    }
+                }
+        }
+    }
+
     fun search(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _state.update {
+                SearchState.Loading
+            }
             networkRepository.searchTracks(query)
-                .catch { }
+                .catch {
+                    _state.update {
+                        SearchState.Error
+                    }
+                }
                 .collect { resource ->
                     if (resource is Resource.Success) {
                         _state.update {
