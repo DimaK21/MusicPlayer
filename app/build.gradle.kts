@@ -56,7 +56,7 @@ dependencies {
     implementation(libs.retrofit.converter)
     implementation(libs.bumptech.glide)
     implementation(libs.room.runtime)
-    implementation(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
