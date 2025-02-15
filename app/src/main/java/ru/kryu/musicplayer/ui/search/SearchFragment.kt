@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -43,20 +44,26 @@ class SearchFragment : Fragment() {
         binding.rvApiTracks.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
-        binding.etSearch.setOnEditorActionListener { v, actionId, event ->
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val query = binding.etSearch.text.toString()
+                val query = binding.etSearch.text.toString().trim()
                 if (query.isNotBlank()) viewModel.search(query)
                 true
+            } else {
+                false
             }
-            false
+        }
+
+        binding.btnRetry.setOnClickListener {
+            val query = binding.etSearch.text.toString().trim()
+            if (query.isNotBlank()) viewModel.search(query) else viewModel.getChart()
         }
 
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
                     is SearchState.Content -> showContent(state.tracks)
-                    SearchState.Error -> showError()
+                    is SearchState.Error -> showError(state.message)
                     SearchState.Loading -> showLoading()
                 }
             }
@@ -64,15 +71,23 @@ class SearchFragment : Fragment() {
     }
 
     private fun showContent(tracks: List<Track>) {
+        binding.rvApiTracks.isVisible = true
+        binding.loadingContainer.isVisible = false
+        binding.errorContainer.isVisible = false
         adapter.updateTracks(tracks)
     }
 
-    private fun showError() {
-
+    private fun showError(message: String) {
+        binding.rvApiTracks.isVisible = false
+        binding.loadingContainer.isVisible = false
+        binding.errorContainer.isVisible = true
+        binding.tvMessage.text = message
     }
 
     private fun showLoading() {
-
+        binding.rvApiTracks.isVisible = false
+        binding.loadingContainer.isVisible = true
+        binding.errorContainer.isVisible = false
     }
 
     private fun openPlayer(track: Track) {

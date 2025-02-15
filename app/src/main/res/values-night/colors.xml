@@ -2,4 +2,6 @@
 <resources>
     <color name="main_background">#006064</color>
     <color name="bottom_background">#003133</color>
+    <color name="error">#CCFFFFFF</color>
+    <color name="text">#CCFFFFFF</color>
 </resources>

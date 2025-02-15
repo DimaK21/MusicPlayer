@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.kryu.musicplayer.domain.DownloadRepository
 import ru.kryu.musicplayer.domain.TrackNetworkRepository
@@ -29,50 +29,36 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getChart() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.update {
-                SearchState.Loading
-            }
+        viewModelScope.launch {
+            _state.value = SearchState.Loading
+            delay(500)
+
             networkRepository.getTopTracks()
-                .catch {
-                    _state.update {
-                        SearchState.Error
-                    }
+                .catch { e ->
+                    _state.value = SearchState.Error(e.localizedMessage ?: "")
                 }
                 .collect { resource ->
-                    if (resource is Resource.Success) {
-                        _state.update {
-                            SearchState.Content(resource.data ?: emptyList())
-                        }
-                    } else {
-                        _state.update {
-                            SearchState.Error
-                        }
+                    _state.value = when (resource) {
+                        is Resource.Success -> SearchState.Content(resource.data ?: emptyList())
+                        is Resource.Error -> SearchState.Error(resource.message ?: "")
                     }
                 }
         }
     }
 
     fun search(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.update {
-                SearchState.Loading
-            }
+        viewModelScope.launch {
+            _state.value = SearchState.Loading
+            delay(500)
+
             networkRepository.searchTracks(query)
-                .catch {
-                    _state.update {
-                        SearchState.Error
-                    }
+                .catch { e ->
+                    _state.value = SearchState.Error(e.localizedMessage ?: "")
                 }
                 .collect { resource ->
-                    if (resource is Resource.Success) {
-                        _state.update {
-                            SearchState.Content(resource.data ?: emptyList())
-                        }
-                    } else {
-                        _state.update {
-                            SearchState.Error
-                        }
+                    _state.value = when (resource) {
+                        is Resource.Success -> SearchState.Content(resource.data ?: emptyList())
+                        is Resource.Error -> SearchState.Error(resource.message ?: "Ошибка запроса")
                     }
                 }
         }

@@ -3,7 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bg_item">#80CBC4</color>
-    <color name="icon_color">#E6EE9C</color>
+    <color name="icon_color">#D8E08A</color>
     <color name="main_background">#FFEBEE</color>
     <color name="bottom_background">#FFCDD2</color>
+    <color name="error">#ffcc0000</color>
+    <color name="text">#FF000000</color>
 </resources>

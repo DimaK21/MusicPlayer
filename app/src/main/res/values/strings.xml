@@ -4,4 +4,6 @@
     <string name="search">Search</string>
     <string name="track_name">Track name</string>
     <string name="artist">Artist</string>
+    <string name="error_loading_data">Произошла ошибка!</string>
+    <string name="retry">Попробовать ещё раз</string>
 </resources>
