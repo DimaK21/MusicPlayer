@@ -2,4 +2,6 @@
     <string name="app_name">Music Player</string>
     <string name="search_in_deezer">Поиск в Deezer</string>
     <string name="search">Search</string>
+    <string name="track_name">Track name</string>
+    <string name="artist">Artist</string>
 </resources>
