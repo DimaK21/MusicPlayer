@@ -6,4 +6,6 @@
     <string name="artist">Artist</string>
     <string name="error_loading_data">Произошла ошибка!</string>
     <string name="retry">Попробовать ещё раз</string>
+    <string name="local_search">Поиск по скаченным трекам</string>
+    <string name="downloads">Downloads</string>
 </resources>
