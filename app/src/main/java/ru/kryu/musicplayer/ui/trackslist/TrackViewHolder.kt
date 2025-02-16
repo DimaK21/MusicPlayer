@@ -7,13 +7,14 @@ import ru.kryu.musicplayer.databinding.ItemTrackBinding
 import ru.kryu.musicplayer.domain.model.Track
 
 class TrackViewHolder(
-    private val binding: ItemTrackBinding
+    private val binding: ItemTrackBinding,
+    private val iconResId: Int,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         track: Track,
         onClick: (Track) -> Unit,
-        onDownloadClick: (Track) -> Unit,
+        onIconClick: (Track) -> Unit,
     ) {
         binding.tvTrackTitle.text = track.title
         binding.tvArtist.text = track.artist
@@ -24,7 +25,8 @@ class TrackViewHolder(
             .placeholder(R.drawable.placeholder_album)
             .into(binding.ivTrackCover)
 
+        binding.btnDownload.setImageResource(iconResId)
         itemView.setOnClickListener { onClick(track) }
-        binding.btnDownload.setOnClickListener { onDownloadClick(track) }
+        binding.btnDownload.setOnClickListener { onIconClick(track) }
     }
 }

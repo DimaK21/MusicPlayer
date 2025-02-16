@@ -10,12 +10,14 @@ class TrackAdapter(
     private var tracks: List<Track> = emptyList(),
     private val onTrackClick: (Track) -> Unit,
     private val onIconClick: (Track) -> Unit,
+    private val iconResId: Int,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return TrackViewHolder(
-            ItemTrackBinding.inflate(inflater, parent, false)
+            ItemTrackBinding.inflate(inflater, parent, false),
+            iconResId
         )
     }
 

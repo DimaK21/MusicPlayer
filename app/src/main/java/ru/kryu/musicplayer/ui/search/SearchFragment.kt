@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import ru.kryu.musicplayer.R
 import ru.kryu.musicplayer.databinding.FragmentSearchBinding
 import ru.kryu.musicplayer.domain.model.Track
 import ru.kryu.musicplayer.ui.trackslist.TrackAdapter
@@ -39,6 +40,7 @@ class SearchFragment : Fragment() {
         adapter = TrackAdapter(
             onTrackClick = { track -> openPlayer(track) },
             onIconClick = { track -> downloadTrack(track) },
+            iconResId = R.drawable.ic_download
         )
         binding.rvApiTracks.adapter = adapter
         binding.rvApiTracks.layoutManager =

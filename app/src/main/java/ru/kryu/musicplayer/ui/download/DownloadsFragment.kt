@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import ru.kryu.musicplayer.R
 import ru.kryu.musicplayer.databinding.FragmentDownloadsBinding
 import ru.kryu.musicplayer.domain.model.Track
 import ru.kryu.musicplayer.ui.trackslist.TrackAdapter
@@ -38,6 +39,7 @@ class DownloadsFragment : Fragment() {
         adapter = TrackAdapter(
             onTrackClick = { track -> openPlayer(track) },
             onIconClick = { track -> deleteTrack(track) },
+            iconResId = R.drawable.ic_delete,
         )
         binding.rvTracks.adapter = adapter
         binding.rvTracks.layoutManager =
