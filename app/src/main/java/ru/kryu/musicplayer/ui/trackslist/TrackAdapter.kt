@@ -9,7 +9,7 @@ import ru.kryu.musicplayer.domain.model.Track
 class TrackAdapter(
     private var tracks: List<Track> = emptyList(),
     private val onTrackClick: (Track) -> Unit,
-    private val onDownloadClick: (Track) -> Unit,
+    private val onIconClick: (Track) -> Unit,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -20,7 +20,7 @@ class TrackAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position], onTrackClick, onDownloadClick)
+        holder.bind(tracks[position], onTrackClick, onIconClick)
     }
 
     override fun getItemCount(): Int = tracks.size

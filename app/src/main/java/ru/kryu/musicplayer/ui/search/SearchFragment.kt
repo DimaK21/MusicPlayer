@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = TrackAdapter(
             onTrackClick = { track -> openPlayer(track) },
-            onDownloadClick = { track -> downloadTrack(track) },
+            onIconClick = { track -> downloadTrack(track) },
         )
         binding.rvApiTracks.adapter = adapter
         binding.rvApiTracks.layoutManager =
