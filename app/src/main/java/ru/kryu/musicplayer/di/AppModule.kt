@@ -9,14 +9,18 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.kryu.musicplayer.data.DeleteDownloadsRepositoryImpl
 import ru.kryu.musicplayer.data.DownloadRepositoryImpl
+import ru.kryu.musicplayer.data.GetDownloadsRepositoryImpl
 import ru.kryu.musicplayer.data.TrackNetworkRepositoryImpl
 import ru.kryu.musicplayer.data.local.AppDatabase
 import ru.kryu.musicplayer.data.local.DownloadsDao
 import ru.kryu.musicplayer.data.network.DeezerApiService
 import ru.kryu.musicplayer.data.network.NetworkClient
 import ru.kryu.musicplayer.data.network.RetrofitNetworkClient
+import ru.kryu.musicplayer.domain.DeleteDownloadsRepository
 import ru.kryu.musicplayer.domain.DownloadRepository
+import ru.kryu.musicplayer.domain.GetDownloadsRepository
 import ru.kryu.musicplayer.domain.TrackNetworkRepository
 import javax.inject.Singleton
 
@@ -70,5 +74,21 @@ object AppModule {
     @Singleton
     fun provideDownloadsDao(db: AppDatabase): DownloadsDao {
         return db.downloadsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteDownloadsRepository(
+        downloadsDao: DownloadsDao,
+    ): DeleteDownloadsRepository {
+        return DeleteDownloadsRepositoryImpl(downloadsDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetDownloadsRepository(
+        downloadsDao: DownloadsDao,
+    ): GetDownloadsRepository {
+        return GetDownloadsRepositoryImpl(downloadsDao)
     }
 }

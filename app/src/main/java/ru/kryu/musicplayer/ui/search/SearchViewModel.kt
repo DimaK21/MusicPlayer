@@ -29,7 +29,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getChart() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _state.value = SearchState.Loading
             delay(500)
 
@@ -47,7 +47,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun search(query: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _state.value = SearchState.Loading
             delay(500)
 
