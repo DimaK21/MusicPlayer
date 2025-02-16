@@ -36,7 +36,7 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val track = args.track
-        viewModel.setTrack(track)
+        viewModel.playTrack(track)
 
         lifecycleScope.launch {
             viewModel.currentTrack.collect { track ->
@@ -48,14 +48,6 @@ class PlayerFragment : Fragment() {
                         .centerCrop()
                         .placeholder(R.drawable.placeholder_album)
                         .into(binding.ivTrackCover)
-
-                    viewModel.playTrack(
-                        if (!it.localPath.isNullOrBlank()) {
-                            it.localPath
-                        } else {
-                            it.previewUrl ?: ""
-                        }
-                    )
                 }
             }
         }
@@ -69,13 +61,23 @@ class PlayerFragment : Fragment() {
             }
         }
 
-        binding.btnPlayPause.setOnClickListener { viewModel.togglePlayPause() }
-
         lifecycleScope.launch {
             viewModel.currentPosition.collect { position ->
                 binding.seekBar.progress = position
+                binding.tvCurrentTime.text = formatTime(position)
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.trackDuration.collect { duration ->
+                binding.seekBar.max = duration
+                binding.tvTotalTime.text = formatTime(duration)
+            }
+        }
+
+        binding.btnPlayPause.setOnClickListener { viewModel.togglePlayPause() }
+        binding.btnNext.setOnClickListener { viewModel.playNextTrack() }
+        binding.btnPrevious.setOnClickListener { viewModel.playPreviousTrack() }
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -85,6 +87,12 @@ class PlayerFragment : Fragment() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+    }
+
+    private fun formatTime(milliseconds: Int): String {
+        val minutes = (milliseconds / 1000) / 60
+        val seconds = (milliseconds / 1000) % 60
+        return String.format("%02d:%02d", minutes, seconds)
     }
 
     override fun onDestroyView() {

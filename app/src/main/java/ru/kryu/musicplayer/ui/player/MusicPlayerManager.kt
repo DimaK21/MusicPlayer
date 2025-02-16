@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import ru.kryu.musicplayer.domain.model.Track
 import javax.inject.Inject
 
 class MusicPlayerManager @Inject constructor() {
@@ -14,11 +15,22 @@ class MusicPlayerManager @Inject constructor() {
     val isPlaying: StateFlow<Boolean> = _isPlaying
     private val _currentPosition = MutableStateFlow(0)
     val currentPosition: StateFlow<Int> = _currentPosition
+    private val _trackDuration = MutableStateFlow(0)
+    val trackDuration: StateFlow<Int> = _trackDuration
+    private val _currentTrack = MutableStateFlow<Track?>(null)
+    val currentTrack: StateFlow<Track?> = _currentTrack
 
-    fun playTrack(url: String) {
+    private var trackList: List<Track> = emptyList()
+
+    fun setTrackList(tracks: List<Track>) {
+        trackList = tracks
+    }
+
+    fun playTrack(track: Track) {
+        _currentTrack.value = track
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
-            setDataSource(url)
+            setDataSource(track.localPath ?: track.previewUrl ?: "")
             setAudioAttributes(
                 AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -29,10 +41,12 @@ class MusicPlayerManager @Inject constructor() {
             setOnPreparedListener {
                 start()
                 _isPlaying.value = true
+                _trackDuration.value = duration
                 updateSeekBar()
             }
             setOnCompletionListener {
                 _isPlaying.value = false
+                playNextTrack()
             }
         }
     }
@@ -60,6 +74,34 @@ class MusicPlayerManager @Inject constructor() {
                 _currentPosition.value = it.currentPosition
                 Handler(Looper.getMainLooper()).postDelayed({ updateSeekBar() }, 1000)
             }
+        }
+    }
+
+    fun playNextTrack() {
+        val nextTrack = getNextTrack()
+        nextTrack?.let { playTrack(it) }
+    }
+
+    fun playPreviousTrack() {
+        val prevTrack = getPreviousTrack()
+        prevTrack?.let { playTrack(it) }
+    }
+
+    private fun getNextTrack(): Track? {
+        val index = trackList.indexOf(_currentTrack.value)
+        return if (index != -1 && index < trackList.size - 1) {
+            trackList[index + 1]
+        } else {
+            trackList.firstOrNull()
+        }
+    }
+
+    private fun getPreviousTrack(): Track? {
+        val index = trackList.indexOf(_currentTrack.value)
+        return if (index > 0) {
+            trackList[index - 1]
+        } else {
+            trackList.lastOrNull()
         }
     }
 
