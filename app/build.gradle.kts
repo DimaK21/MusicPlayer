@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.lifecycle.service)
+    implementation(libs.media)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.fragment.ktx)
