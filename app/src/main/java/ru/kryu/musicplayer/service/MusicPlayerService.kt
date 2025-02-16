@@ -98,7 +98,7 @@ class MusicPlayerService : LifecycleService() {
             ACTION_PLAY_PAUSE -> musicPlayerManager.togglePlayPause()
             ACTION_NEXT -> musicPlayerManager.playNextTrack()
             ACTION_PREVIOUS -> musicPlayerManager.playPreviousTrack()
-            ACTION_STOP -> stopSelf()
+            ACTION_STOP -> stopService()
         }
     }
 
@@ -106,6 +106,17 @@ class MusicPlayerService : LifecycleService() {
         super.onDestroy()
         musicPlayerManager.release()
         mediaSession.release()
+    }
+
+    private fun stopService() {
+        musicPlayerManager.release()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        stopService()
     }
 
     companion object {

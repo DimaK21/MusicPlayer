@@ -83,9 +83,17 @@ class MusicNotificationManager(
                     getPendingIntent(MusicPlayerService.ACTION_NEXT)
                 )
             )
+            .addAction(
+                NotificationCompat.Action(
+                    android.R.drawable.ic_delete,
+                    "Stop",
+                    getPendingIntent(MusicPlayerService.ACTION_STOP)
+                )
+            )
             .setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
+                    .setShowActionsInCompactView(1, 2, 3)
             )
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOnlyAlertOnce(true)
