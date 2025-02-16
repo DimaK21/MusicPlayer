@@ -22,6 +22,7 @@ import ru.kryu.musicplayer.domain.DeleteDownloadsRepository
 import ru.kryu.musicplayer.domain.DownloadRepository
 import ru.kryu.musicplayer.domain.GetDownloadsRepository
 import ru.kryu.musicplayer.domain.TrackNetworkRepository
+import ru.kryu.musicplayer.ui.player.MusicPlayerManager
 import javax.inject.Singleton
 
 @Module
@@ -90,5 +91,11 @@ object AppModule {
         downloadsDao: DownloadsDao,
     ): GetDownloadsRepository {
         return GetDownloadsRepositoryImpl(downloadsDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMusicPlayerManager(): MusicPlayerManager {
+        return MusicPlayerManager()
     }
 }
