@@ -8,6 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +54,9 @@ class DownloadsFragment : Fragment() {
     }
 
     private fun openPlayer(track: Track) {
-
+        findNavController().navigate(
+            DownloadsFragmentDirections.actionDownloadsFragmentToPlayerFragment(track)
+        )
     }
 
     private fun deleteTrack(track: Track) {

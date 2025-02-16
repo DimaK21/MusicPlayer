@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -29,5 +30,8 @@ class MainActivity : AppCompatActivity() {
         val navController: NavController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomNavigationView.isVisible = destination.id != R.id.playerFragment
+        }
     }
 }
