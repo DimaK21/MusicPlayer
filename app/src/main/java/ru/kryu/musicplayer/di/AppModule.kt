@@ -1,6 +1,8 @@
 package ru.kryu.musicplayer.di
 
+import android.app.Service
 import android.content.Context
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -22,6 +24,7 @@ import ru.kryu.musicplayer.domain.DeleteDownloadsRepository
 import ru.kryu.musicplayer.domain.DownloadRepository
 import ru.kryu.musicplayer.domain.GetDownloadsRepository
 import ru.kryu.musicplayer.domain.TrackNetworkRepository
+import ru.kryu.musicplayer.service.MusicNotificationManager
 import ru.kryu.musicplayer.ui.player.MusicPlayerManager
 import javax.inject.Singleton
 
@@ -95,7 +98,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMusicPlayerManager(): MusicPlayerManager {
-        return MusicPlayerManager()
+    fun provideMusicPlayerManager(
+        @ApplicationContext context: Context,
+    ): MusicPlayerManager {
+        return MusicPlayerManager(context)
     }
 }

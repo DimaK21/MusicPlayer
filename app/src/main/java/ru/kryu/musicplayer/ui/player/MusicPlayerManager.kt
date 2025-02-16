@@ -1,15 +1,21 @@
 package ru.kryu.musicplayer.ui.player
 
+import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kryu.musicplayer.domain.model.Track
+import ru.kryu.musicplayer.service.MusicPlayerService
 import javax.inject.Inject
 
-class MusicPlayerManager @Inject constructor() {
+class MusicPlayerManager @Inject constructor(
+    private val context: Context,
+) {
     private var mediaPlayer: MediaPlayer? = null
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying: StateFlow<Boolean> = _isPlaying
@@ -28,6 +34,7 @@ class MusicPlayerManager @Inject constructor() {
 
     fun playTrack(track: Track) {
         _currentTrack.value = track
+        startService()
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
             setDataSource(track.localPath ?: track.previewUrl ?: "")
@@ -51,6 +58,11 @@ class MusicPlayerManager @Inject constructor() {
         }
     }
 
+    private fun startService() {
+        val intent = Intent(context, MusicPlayerService::class.java)
+        ContextCompat.startForegroundService(context, intent)
+    }
+
     fun togglePlayPause() {
         mediaPlayer?.let {
             if (it.isPlaying) {
@@ -60,6 +72,7 @@ class MusicPlayerManager @Inject constructor() {
                 it.start()
                 _isPlaying.value = true
                 updateSeekBar()
+                startService()
             }
         }
     }
